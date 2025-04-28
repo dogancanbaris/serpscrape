@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SERPient | SERPTech Platform</title>
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
+<style>
+    body {
+        font-family: 'Roboto', Arial, sans-serif;
+        background: #eaf3f6;
+        margin: 0;
+        padding: 0;
+    }
+    .topbar {
+        background: linear-gradient(90deg, #14b8a6 0%, #2563eb 100%);
+        color: #fff;
+        padding: 18px 40px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 2px 10px rgba(20,184,166,0.08);
+    }
+    .platform-title {
+        font-size: 22px;
+        font-weight: bold;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+    }
+    .user-actions {
+        font-size: 18px;
+        opacity: 0.7;
+    }
+    .main-content {
+        max-width: 1200px;
+        margin: 48px auto 0 auto;
+        display: flex;
+        gap: 50px;
+        justify-content: center;
+    }
+    .card {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 24px rgba(37,99,235,0.07);
+        padding: 38px 36px 34px 36px;
+        min-width: 340px;
+        width: 420px;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .tool-header {
+        font-size: 30px;
+        font-weight: 900;
+        color: #14b8a6;
+        letter-spacing: 1px;
+        margin-bottom: 7px;
+    }
+    .tool-desc {
+        color: #555;
+        font-size: 15px;
+        margin-bottom: 28px;
+    }
+    .section-label {
+        font-weight: 700;
+        color: #2563eb;
+        margin-top: 18px;
+        margin-bottom: 7px;
+        font-size: 16px;
+        letter-spacing: 0.5px;
+    }
+    label {
+        font-weight: 500;
+        margin-top: 13px;
+        display: block;
+        color: #22334d;
+        font-size: 14px;
+    }
+    select, input[type="text"], textarea {
+        width: 100%;
+        padding: 10px 12px;
+        margin-top: 5px;
+        margin-bottom: 17px;
+        border: 1.5px solid #cce1ea;
+        border-radius: 7px;
+        font-size: 15px;
+        font-family: inherit;
+        box-sizing: border-box;
+        background: #f7fafc;
+        transition: border-color 0.2s;
+    }
+    select:focus, input[type="text"]:focus, textarea:focus {
+        outline: none;
+        border-color: #14b8a6;
+    }
+    textarea {
+        min-height: 90px;
+        resize: vertical;
+    }
+    .radio-group, .toggle-group {
+        margin: 9px 0 18px 0;
+        display: flex;
+        gap: 20px;
+        align-items: center;
+    }
+    .radio-group label,
+    .toggle-group label {
+        display: flex;
+        align-items: center;
+        font-weight: 400;
+        font-size: 14px;
+        margin: 0;
+        gap: 5px;
+    }
+    .toggle-group {
+        margin-bottom: 10px;
+    }
+    .input-count {
+        font-size: 13px;
+        color: #668;
+        float: right;
+        margin-top: -24px;
+        margin-bottom: 11px;
+    }
+    .import-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 12px;
+    }
+    .import-btn, .template-btn {
+        background: #2563eb;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        padding: 7px 16px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        margin-right: 4px;
+        transition: background 0.2s;
+    }
+    .import-btn:hover, .template-btn:hover {
+        background: #14b8a6;
+    }
+    .submit-btn {
+        width: 100%;
+        background: linear-gradient(90deg, #14b8a6 0%, #2563eb 100%);
+        color: #fff;
+        border: none;
+        border-radius: 7px;
+        padding: 15px 0;
+        font-size: 19px;
+        font-weight: 800;
+        cursor: pointer;
+        margin-top: 25px;
+        margin-bottom: 5px;
+        transition: background 0.2s;
+        letter-spacing: 1px;
+    }
+    .submit-btn:disabled {
+        background: #d3dbe6;
+        cursor: not-allowed;
+    }
+    /* Info panel */
+    .info-panel {
+        background: #f7fafc;
+        border-radius: 14px;
+        padding: 38px 32px 30px 32px;
+        color: #23344d;
+        font-size: 15px;
+        line-height: 1.6;
+        max-width: 350px;
+        min-width: 240px;
+        flex: 1 1 260px;
+        box-shadow: 0 2px 10px rgba(20,184,166,0.04);
+    }
+    .info-panel h3 {
+        color: #2563eb;
+        font-size: 18px;
+        font-weight: 800;
+        margin-top: 0;
+        margin-bottom: 15px;
+    }
+    .info-panel ul {
+        margin-left: 18px;
+        margin-bottom: 0;
+    }
+    .info-panel li {
+        margin-bottom: 10px;
+    }
+    .keywords-label {
+        font-weight: 700;
+        color: #2563eb;
+        margin-bottom: 6px;
+        font-size: 15px;
+        letter-spacing: 0.5px;
+    }
+    /* Modal styles */
+    .modal-bg {
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(44, 62, 80, 0.23);
+        z-index: 1000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+    }
+    .modal-bg.active { display: flex; }
+    .modal {
+        background: #fff;
+        border-radius: 14px;
+        box-shadow: 0 8px 40px rgba(20,184,166,0.13);
+        padding: 34px 32px 28px 32px;
+        max-width: 470px;
+        width: 97vw;
+        position: relative;
+    }
+    .modal-close {
+        position: absolute;
+        top: 13px;
+        right: 13px;
+        font-size: 21px;
+        color: #2563eb;
+        background: #f7fafc;
+        border-radius: 50%;
+        width: 27px;
+        height: 27px;
+        text-align: center;
+        line-height: 27px;
+        cursor: pointer;
+        border: 2px solid #2563eb;
+    }
+    .modal-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: #2563eb;
+        margin-bottom: 10px;
+    }
+    .modal-content {
+        font-size: 15px;
+        color: #222;
+    }
+    .modal-content code {
+        background: #f7fafc;
+        padding: 2px 4px;
+        border-radius: 3px;
+        font-size: 14px;
+    }
+    /* Jobs table */
+    .jobs-section {
+        max-width: 1200px;
+        margin: 32px auto 0 auto;
+    }
+    .jobs-section h3 {
+        color: #2563eb;
+        font-weight: 800;
+        margin-bottom: 8px;
+    }
+    #jobsTable {
+        width: 100%;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(20,184,166,0.06);
+        margin-top: 12px;
+        border-collapse: collapse;
+    }
+    #jobsTable th, #jobsTable td {
+        padding: 8px 10px;
+        text-align: left;
+        font-size: 14px;
+    }
+    #jobsTable th {
+        background: #f7fafc;
+        font-weight: 700;
+    }
+    #jobsTable tr:nth-child(even) {
+        background: #f3f6fa;
+    }
+    @media (max-width: 1050px) {
+        .main-content { flex-direction: column; gap: 20px; margin: 20px; align-items: center;}
+        .card, .info-panel { max-width: 100%; min-width: 0; }
+    }
+</style>
+</head>
+<body>
+<div class="topbar">
+    <span class="platform-title">SERPTECH PLATFORM</span>
+    <span class="user-actions">&#9881; &nbsp; &#128100;</span>
+</div>
+<div class="main-content">
+    <!-- Input Card -->
+    <div class="card">
+        <div class="tool-header">SERPient</div>
+        <div class="tool-desc">
+            Instantly retrieve Google ranking data for your keywords using ValueSERP.<br>
+            Configure your search, enter your keywords, and submit to get results in seconds.
+        </div>
+        <form id="serpForm">
+            <div class="import-row">
+                <button type="button" class="import-btn" onclick="document.getElementById('importFile').click();">Import</button>
+                <input type="file" id="importFile" accept=".csv" style="display:none;">
+                <button type="button" class="template-btn" onclick="showModal()">Download Template / Example</button>
+            </div>
+
+            <div class="section-label">Search Settings</div>
+            <label for="search_engine">Search Engine</label>
+            <select id="search_engine" name="search_engine">
+                <option value="google.com">google.com (United States)</option>
+                <option value="google.ca">google.ca (Canada)</option>
+                <option value="google.co.uk">google.co.uk (UK)</option>
+            </select>
+
+            <label>Device</label>
+            <div class="radio-group">
+                <label><input type="radio" name="device" value="desktop" checked> Desktop</label>
+                <label><input type="radio" name="device" value="mobile"> Mobile</label>
+            </div>
+
+            <label for="location">Location</label>
+            <select id="location" name="location">
+                <option value="Canada">Canada</option>
+                <option value="Alberta,Canada">Alberta,Canada</option>
+                <option value="British Columbia,Canada">British Columbia,Canada</option>
+                <option value="Manitoba,Canada">Manitoba,Canada</option>
+                <option value="New Brunswick,Canada">New Brunswick,Canada</option>
+                <option value="Newfoundland and Labrador,Canada">Newfoundland and Labrador,Canada</option>
+                <option value="Nova Scotia,Canada">Nova Scotia,Canada</option>
+                <option value="Ontario,Canada">Ontario,Canada</option>
+                <option value="Prince Edward Island,Canada">Prince Edward Island,Canada</option>
+                <option value="Quebec,Canada">Quebec,Canada</option>
+                <option value="Saskatchewan,Canada">Saskatchewan,Canada</option>
+                <option value="Toronto,Ontario,Canada">Toronto,Ontario,Canada</option>
+                <option value="Vancouver,British Columbia,Canada">Vancouver,British Columbia,Canada</option>
+                <option value="Montreal,Quebec,Canada">Montreal,Quebec,Canada</option>
+                <option value="Calgary,Alberta,Canada">Calgary,Alberta,Canada</option>
+                <option value="Ottawa,Ontario,Canada">Ottawa,Ontario,Canada</option>
+                <option value="Edmonton,Alberta,Canada">Edmonton,Alberta,Canada</option>
+                <option value="Winnipeg,Manitoba,Canada">Winnipeg,Manitoba,Canada</option>
+                <option value="Quebec City,Quebec,Canada">Quebec City,Quebec,Canada</option>
+                <option value="Halifax,Nova Scotia,Canada">Halifax,Nova Scotia,Canada</option>
+                <option value="Victoria,British Columbia,Canada">Victoria,British Columbia,Canada</option>
+            </select>
+
+            <label for="page_depth">Page Depth</label>
+            <select id="page_depth" name="page_depth">
+                <option value="10">10 positions</option>
+                <option value="20">20 positions</option>
+                <option value="50">50 positions</option>
+                <option value="100">100 positions</option>
+            </select>
+
+            <div class="toggle-group">
+                <label><input type="checkbox" id="include_aio" name="include_aio" checked> Include Answer Box (AIO)</label>
+                <label><input type="checkbox" id="include_ads" name="include_ads" checked> Include Ads</label>
+            </div>
+
+            <div class="keywords-label">Keywords</div>
+            <textarea id="keywords" name="keywords" placeholder="Type or paste keywords here..." maxlength="15000"></textarea>
+            <div class="input-count"><span id="keywordCount">0</span> Keywords Added &nbsp; | &nbsp; 15,000 Max</div>
+            <button type="submit" class="submit-btn" id="submitBtn" disabled>SUBMIT</button>
+        </form>
+    </div>
+    <!-- Info Panel -->
+    <div class="info-panel">
+        <h3>How SERPient Works</h3>
+        <ul>
+            <li><b>Step 1:</b> Choose your search settings:
+                <ul style="margin-top:4px;">
+                    <li>Search engine (e.g., google.ca)</li>
+                    <li>Device type (desktop or mobile)</li>
+                    <li>Location (Canada, province, or city)</li>
+                    <li>Page depth (number of results)</li>
+                    <li>Include Answer Box (AIO) and/or Ads</li>
+                </ul>
+            </li>
+            <li><b>Step 2:</b> Enter one keyword per line in the box, or use <b>Import</b> to upload a CSV with search terms and filters.</li>
+            <li><b>Step 3:</b> Click <b>Submit</b> to process. Jobs will appear below, showing status and download links when ready.</li>
+            <li><b>Step 4:</b> Download your results as a CSV file, including absolute, overall, and organic positions for each result.</li>
+        </ul>
+        <div style="margin-top:18px;font-size:13px;color:#888;">
+            Powered by ValueSERP API.<br>
+            Processing time depends on queue and keyword count.<br>
+            Only organic results are available on trial keys.
+        </div>
+    </div>
+</div>
+<div id="output" class="output-area" style="display:none;"></div>
+
+<!-- Jobs Table Section -->
+<div class="jobs-section">
+    <h3>Previous Scrape Jobs</h3>
+    <table id="jobsTable">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Keywords</th>
+                <th>Device</th>
+                <th>Location</th>
+                <th>Depth</th>
+                <th>AIO</th>
+                <th>Ads</th>
+                <th>Status</th>
+                <th>Download</th>
+            </tr>
+        </thead>
+        <tbody id="jobsTbody"></tbody>
+    </table>
+</div>
+
+<!-- Modal for template/example -->
+<div class="modal-bg" id="modalBg">
+    <div class="modal">
+        <div class="modal-close" id="modalClose">&times;</div>
+        <div class="modal-title">CSV Import Template Example</div>
+        <div class="modal-content">
+            <p>Your CSV should have the following columns:</p>
+            <code>keyword,device,location,page_depth,include_aio,include_ads</code>
+            <p>Example row:</p>
+            <code>bank of america,desktop,Toronto,Ontario,Canada,10,true,true</code>
+            <p>You can download a sample file <a href="#" onclick="downloadTemplate();return false;">here</a>.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Enable submit if keywords are entered
+    const keywords = document.getElementById('keywords');
+    const submitBtn = document.getElementById('submitBtn');
+    const keywordCount = document.getElementById('keywordCount');
+
+    keywords.addEventListener('input', function() {
+        let count = keywords.value.trim().split(/\n+/).filter(Boolean).length;
+        if (keywords.value.trim() === "") count = 0;
+        keywordCount.textContent = count;
+        submitBtn.disabled = count === 0;
+    });
+
+    // Modal logic
+    function showModal() {
+        document.getElementById('modalBg').classList.add('active');
+    }
+    document.getElementById('modalClose').onclick = function() {
+        document.getElementById('modalBg').classList.remove('active');
+    };
+    window.onclick = function(event) {
+        if (event.target === document.getElementById('modalBg')) {
+            document.getElementById('modalBg').classList.remove('active');
+        }
+    };
+
+    // Download template
+    function downloadTemplate() {
+        const csv = 'keyword,device,location,page_depth,include_aio,include_ads\n' +
+                    'bank of america,desktop,Toronto,Ontario,Canada,10,true,true\n';
+        const blob = new Blob([csv], {type: 'text/csv'});
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = "serpient_template.csv";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+    }
+
+    // Handle import
+    document.getElementById('importFile').addEventListener('change', function(e) {
+        const file e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+            const lines = evt.target.result.split('\n').map(l => l.trim()).filter(Boolean);
+            if (lines.length < 2) return alert("No data found in file.");
+            const headers = lines[0].split(',').map(h => h.trim());
+            const rows = lines.slice(1).map(line => {
+                const values = line.split(',');
+                const obj = {};
+                headers.forEach((h, i) => obj[h] = values[i]);
+                return obj;
+            });
+            // Use first row to populate fields (for demo, you could support batch jobs)
+            const row = rows[0];
+            if (row.keyword) keywords.value = row.keyword;
+            if (row.device) {
+                document.querySelectorAll('input[name="device"]').forEach(r => r.checked = (r.value === row.device));
+            }
+            if (row.location) document.getElementById('location').value = row.location;
+            if (row.page_depth) document.getElementById('page_depth').value = row.page_depth;
+            if (row.include_aio) document.getElementById('include_aio').checked = (row.include_aio.toLowerCase() === 'true');
+            if (row.include_ads) document.getElementById('include_ads').checked = (row.include_ads.toLowerCase() === 'true');
+            // Trigger input event to update UI
+            keywords.dispatchEvent(new Event('input'));
+        };
+        reader.readAsText(file);
+    });
+
+    // Job tracking (in-memory for demo)
+    let jobs = [];
+
+    function addJob(job) {
+        jobs.unshift(job); // Add to start of array
+        renderJobs();
+    }
+
+    function updateJobStatus(id, status, downloadUrl=null) {
+        const job = jobs.find(j => j.id === id);
+        if (job) {
+            job.status = status;
+            if (downloadUrl) job.downloadUrl = downloadUrl;
+            renderJobs();
+        }
+    }
+
+    function renderJobs() {
+        const tbody = document.getElementById('jobsTbody');
+        tbody.innerHTML = '';
+        jobs.forEach(job => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${job.date}</td>
+                <td>${job.keywords.join(', ')}</td>
+                <td>${job.device}</td>
+                <td>${job.location}</td>
+                <td>${job.page_depth}</td>
+                <td>${job.include_aio ? 'Yes' : 'No'}</td>
+                <td>${job.include_ads ? 'Yes' : 'No'}</td>
+                <td>${job.status}</td>
+                <td>${
+                    job.status === 'Complete'
+                        ? `<a href="${job.downloadUrl}" download="serpient_results.csv">Download</a>`
+                        : ''
+                }</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    // Update your form submission handler:
+    document.getElementById('serpForm').onsubmit = async function(e) {
+        e.preventDefault();
+
+        // Gather form values...
+        const search_engine = document.getElementById('search_engine').value;
+        const device = document.querySelector('input[name="device"]:checked').value;
+        const location = document.getElementById('location').value;
+        const page_depth = document.getElementById('page_depth').value;
+        const include_aio = document.getElementById('include_aio').checked;
+        const include_ads = document.getElementById('include_ads').checked;
+        const keywordsArr = document.getElementById('keywords').value.trim().split('\n').filter(Boolean);
+
+        // Create a job entry
+        const jobId = Date.now().toString();
+        addJob({
+            id: jobId,
+            date: new Date().toLocaleString(),
+            keywords: keywordsArr,
+            device,
+            location,
+            page_depth,
+            include_aio,
+            include_ads,
+            status: 'Processing',
+            downloadUrl: null
+        });
+
+        // Show loading message
+        const outputDiv = document.getElementById('output');
+        outputDiv.style.display = 'block';
+        outputDiv.textContent = "Processing... Please wait.";
+
+        try {
+            const res = await fetch('/search', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    search_engine,
+                    device,
+                    location,
+                    page_depth,
+                    include_aio,
+                    include_ads,
+                    keywords: keywordsArr
+                })
+            });
+
+            if (!res.ok) throw new Error("Network response was not ok");
+
+            const blob = await res.blob();
+            const url = window.URL.createObjectURL(blob);
+
+            // Update job status and download link
+            updateJobStatus(jobId, 'Complete', url);
+
+            // Auto-download
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = "serpient_results.csv";
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+
+            outputDiv.innerHTML = "<span style='color:green;'>Download started: <b>serpient_results.csv</b></span>";
+        } catch (err) {
+            updateJobStatus(jobId, 'Error');
+            outputDiv.innerHTML = "<span style='color:red;'>Error processing request.</span>";
+        }
+    };
+</script>
+</body>
+</html>
