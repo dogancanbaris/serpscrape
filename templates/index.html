@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>SERPient | SERPTech Platform</title>
+<title>Serpscraper | SERPTech Platform</title>
 <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
 <style>
     body {
@@ -30,23 +30,43 @@
         font-size: 18px;
         opacity: 0.7;
     }
-    .main-content {
+    .top-panel {
         max-width: 1200px;
         margin: 48px auto 0 auto;
-        display: flex;
-        gap: 50px;
-        justify-content: center;
-    }
-    .card {
         background: #fff;
         border-radius: 16px;
         box-shadow: 0 4px 24px rgba(37,99,235,0.07);
-        padding: 38px 36px 34px 36px;
+        padding: 36px 36px 30px 36px;
+        display: flex;
+        gap: 44px;
+        justify-content: flex-start;
+        align-items: flex-start;
+    }
+    .input-card, .jobs-card {
+        background: none;
+        border-radius: 0;
+        box-shadow: none;
         min-width: 340px;
-        width: 420px;
+        width: 430px;
         display: flex;
         flex-direction: column;
         align-items: stretch;
+        padding: 0;
+    }
+    .jobs-card {
+        min-width: 440px;
+        width: 500px;
+        max-width: 600px;
+        min-height: 480px;
+        padding-bottom: 0;
+        justify-content: flex-start;
+    }
+    .jobs-table-wrapper {
+        flex: 1 1 auto;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
     }
     .tool-header {
         font-size: 30px;
@@ -125,7 +145,7 @@
         display: flex;
         align-items: center;
         gap: 12px;
-        margin-bottom: 12px;
+        margin-bottom: 18px;
     }
     .import-btn, .template-btn {
         background: #2563eb;
@@ -161,33 +181,6 @@
         background: #d3dbe6;
         cursor: not-allowed;
     }
-    /* Info panel */
-    .info-panel {
-        background: #f7fafc;
-        border-radius: 14px;
-        padding: 38px 32px 30px 32px;
-        color: #23344d;
-        font-size: 15px;
-        line-height: 1.6;
-        max-width: 350px;
-        min-width: 240px;
-        flex: 1 1 260px;
-        box-shadow: 0 2px 10px rgba(20,184,166,0.04);
-    }
-    .info-panel h3 {
-        color: #2563eb;
-        font-size: 18px;
-        font-weight: 800;
-        margin-top: 0;
-        margin-bottom: 15px;
-    }
-    .info-panel ul {
-        margin-left: 18px;
-        margin-bottom: 0;
-    }
-    .info-panel li {
-        margin-bottom: 10px;
-    }
     .keywords-label {
         font-weight: 700;
         color: #2563eb;
@@ -195,11 +188,59 @@
         font-size: 15px;
         letter-spacing: 0.5px;
     }
+    .jobs-card h3 {
+        color: #2563eb;
+        font-weight: 800;
+        margin-bottom: 8px;
+    }
+    #jobsTable {
+        width: 100%;
+        background: #fff;
+        border-radius: 10px;
+        margin-top: 12px;
+        border-collapse: collapse;
+    }
+    #jobsTable th, #jobsTable td {
+        padding: 8px 10px;
+        text-align: left;
+        font-size: 14px;
+    }
+    #jobsTable th {
+        background: #f7fafc;
+        font-weight: 700;
+    }
+    #jobsTable tr:nth-child(even) {
+        background: #f3f6fa;
+    }
+    /* Info panel bottom aligned with input card */
+    .info-panel-bottom {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 24px rgba(37,99,235,0.07);
+        padding: 38px 32px 30px 32px;
+        color: #23344d;
+        font-size: 15px;
+        line-height: 1.6;
+        margin: 42px auto 38px auto;
+        max-width: 1200px;
+        width: 100%;
+    }
+    .info-panel-bottom code {
+        background: #f7fafc;
+        padding: 2px 4px;
+        border-radius: 3px;
+        font-size: 14px;
+    }
+    .template-link {
+        color: #2563eb;
+        cursor: pointer;
+        text-decoration: underline;
+    }
     /* Modal styles */
     .modal-bg {
         position: fixed;
         top: 0; left: 0; right: 0; bottom: 0;
-        background: rgba(44, 62, 80, 0.23);
+        background: rgba(44,62,80,0.23);
         z-index: 1000;
         display: none;
         align-items: center;
@@ -246,39 +287,10 @@
         border-radius: 3px;
         font-size: 14px;
     }
-    /* Jobs table */
-    .jobs-section {
-        max-width: 1200px;
-        margin: 32px auto 0 auto;
-    }
-    .jobs-section h3 {
-        color: #2563eb;
-        font-weight: 800;
-        margin-bottom: 8px;
-    }
-    #jobsTable {
-        width: 100%;
-        background: #fff;
-        border-radius: 10px;
-        box-shadow: 0 2px 8px rgba(20,184,166,0.06);
-        margin-top: 12px;
-        border-collapse: collapse;
-    }
-    #jobsTable th, #jobsTable td {
-        padding: 8px 10px;
-        text-align: left;
-        font-size: 14px;
-    }
-    #jobsTable th {
-        background: #f7fafc;
-        font-weight: 700;
-    }
-    #jobsTable tr:nth-child(even) {
-        background: #f3f6fa;
-    }
-    @media (max-width: 1050px) {
-        .main-content { flex-direction: column; gap: 20px; margin: 20px; align-items: center;}
-        .card, .info-panel { max-width: 100%; min-width: 0; }
+    @media (max-width: 1100px) {
+        .top-panel, .info-panel-bottom { max-width: 98vw; min-width: 0; width: 95vw;}
+        .main-row { flex-direction: column; gap: 20px; margin: 20px; align-items: center;}
+        .input-card, .jobs-card { max-width: 100%; min-width: 0; width: 95vw;}
     }
 </style>
 </head>
@@ -287,10 +299,10 @@
     <span class="platform-title">SERPTECH PLATFORM</span>
     <span class="user-actions">&#9881; &nbsp; &#128100;</span>
 </div>
-<div class="main-content">
+<div class="top-panel">
     <!-- Input Card -->
-    <div class="card">
-        <div class="tool-header">SERPient</div>
+    <div class="input-card">
+        <div class="tool-header">Serpscraper</div>
         <div class="tool-desc">
             Instantly retrieve Google ranking data for your keywords using ValueSERP.<br>
             Configure your search, enter your keywords, and submit to get results in seconds.
@@ -299,7 +311,7 @@
             <div class="import-row">
                 <button type="button" class="import-btn" onclick="document.getElementById('importFile').click();">Import</button>
                 <input type="file" id="importFile" accept=".csv" style="display:none;">
-                <button type="button" class="template-btn" onclick="showModal()">Download Template / Example</button>
+                <button type="button" class="template-btn" onclick="showTemplateModal()">Template Example</button>
             </div>
 
             <div class="section-label">Search Settings</div>
@@ -359,72 +371,81 @@
             <div class="input-count"><span id="keywordCount">0</span> Keywords Added &nbsp; | &nbsp; 15,000 Max</div>
             <button type="submit" class="submit-btn" id="submitBtn" disabled>SUBMIT</button>
         </form>
+        <div id="output" class="output-area" style="display:none;"></div>
     </div>
-    <!-- Info Panel -->
-    <div class="info-panel">
-        <h3>How SERPient Works</h3>
-        <ul>
-            <li><b>Step 1:</b> Choose your search settings:
-                <ul style="margin-top:4px;">
-                    <li>Search engine (e.g., google.ca)</li>
-                    <li>Device type (desktop or mobile)</li>
-                    <li>Location (Canada, province, or city)</li>
-                    <li>Page depth (number of results)</li>
-                    <li>Include Answer Box (AIO) and/or Ads</li>
-                </ul>
-            </li>
-            <li><b>Step 2:</b> Enter one keyword per line in the box, or use <b>Import</b> to upload a CSV with search terms and filters.</li>
-            <li><b>Step 3:</b> Click <b>Submit</b> to process. Jobs will appear below, showing status and download links when ready.</li>
-            <li><b>Step 4:</b> Download your results as a CSV file, including absolute, overall, and organic positions for each result.</li>
-        </ul>
-        <div style="margin-top:18px;font-size:13px;color:#888;">
-            Powered by ValueSERP API.<br>
-            Processing time depends on queue and keyword count.<br>
-            Only organic results are available on trial keys.
+    <!-- Jobs Card -->
+    <div class="jobs-card">
+        <h3>Previous Scrape Jobs</h3>
+        <div class="jobs-table-wrapper">
+            <table id="jobsTable">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Keywords</th>
+                        <th>Device</th>
+                        <th>Location</th>
+                        <th>Depth</th>
+                        <th>AIO</th>
+                        <th>Ads</th>
+                        <th>Status</th>
+                        <th>Download</th>
+                    </tr>
+                </thead>
+                <tbody id="jobsTbody"></tbody>
+            </table>
         </div>
     </div>
 </div>
-<div id="output" class="output-area" style="display:none;"></div>
-
-<!-- Jobs Table Section -->
-<div class="jobs-section">
-    <h3>Previous Scrape Jobs</h3>
-    <table id="jobsTable">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Keywords</th>
-                <th>Device</th>
-                <th>Location</th>
-                <th>Depth</th>
-                <th>AIO</th>
-                <th>Ads</th>
-                <th>Status</th>
-                <th>Download</th>
-            </tr>
-        </thead>
-        <tbody id="jobsTbody"></tbody>
-    </table>
+<!-- Info Panel at Bottom, aligned with input card -->
+<div class="info-panel-bottom">
+    <h3>How Serpscraper Works</h3>
+    <ul>
+        <li><b>Step 1:</b> Choose your search settings:
+            <ul style="margin-top:4px;">
+                <li>Search engine (e.g., google.ca)</li>
+                <li>Device type (desktop or mobile)</li>
+                <li>Location (Canada, province, or city)</li>
+                <li>Page depth (number of results)</li>
+                <li>Include Answer Box (AIO) and/or Ads</li>
+            </ul>
+        </li>
+        <li><b>Step 2:</b> Enter one keyword per line in the box, or use <b>Import</b> to upload a CSV with search terms and filters.</li>
+        <li><b>Step 3:</b> Click <b>Submit</b> to process. Jobs will appear above, showing status and download links when ready.</li>
+        <li><b>Step 4:</b> Download your results as a CSV file, including absolute, overall, and organic positions for each result.</li>
+    </ul>
+    <div style="margin-top:18px;font-size:13px;color:#888;">
+        Powered by ValueSERP API.<br>
+        Processing time depends on queue and keyword count.<br>
+        Only organic results are available on trial keys.
+    </div>
+    <div style="margin-top:30px;">
+        <b>CSV Import Template Example</b><br>
+        Your CSV should have the following columns:<br>
+        <code>keyword,device,location,page_depth,include_aio,include_ads</code><br>
+        Example row:<br>
+        <code>bank of america,desktop,Toronto,Ontario,Canada,10,true,true</code><br>
+        <span class="template-link" onclick="showTemplateModal()">See template example</span>
+    </div>
 </div>
 
 <!-- Modal for template/example -->
-<div class="modal-bg" id="modalBg">
+<div class="modal-bg" id="templateModalBg">
     <div class="modal">
-        <div class="modal-close" id="modalClose">&times;</div>
+        <div class="modal-close" id="templateModalClose">&times;</div>
         <div class="modal-title">CSV Import Template Example</div>
         <div class="modal-content">
             <p>Your CSV should have the following columns:</p>
             <code>keyword,device,location,page_depth,include_aio,include_ads</code>
             <p>Example row:</p>
             <code>bank of america,desktop,Toronto,Ontario,Canada,10,true,true</code>
-            <p>You can download a sample file <a href="#" onclick="downloadTemplate();return false;">here</a>.</p>
+            <p>Save your file as <b>CSV</b> and use the Import button to upload.</p>
         </div>
     </div>
 </div>
 
 <script>
     // Enable submit if keywords are entered
-    const keywords = document.getElementById('keywords');
+    keywords = document.getElementById('keywords');
     const submitBtn = document.getElementById('submitBtn');
     const keywordCount = document.getElementById('keywordCount');
 
@@ -435,37 +456,23 @@
         submitBtn.disabled = count === 0;
     });
 
-    // Modal logic
-    function showModal() {
-        document.getElementById('modalBg').classList.add('active');
+    // Modal logic for template example
+    function showTemplateModal() {
+        document.getElementById('templateModalBg').classList.add('active');
     }
-    document.getElementById('modalClose').onclick = function() {
-        document.getElementById('modalBg').classList.remove('active');
+    document.getElementById('templateModalClose').onclick = function() {
+        document.getElementById('templateModalBg').classList.remove('active');
     };
-    window.onclick = function(event) {
-        if (event.target === document.getElementById('modalBg')) {
-            document.getElementById('modalBg').classList.remove('active');
+    window.addEventListener('click', function(event) {
+        const modalBg = document.getElementById('templateModalBg');
+        if (event.target === modalBg) {
+            modalBg.classList.remove('active');
         }
-    };
-
-    // Download template
-    function downloadTemplate() {
-        const csv = 'keyword,device,location,page_depth,include_aio,include_ads\n' +
-                    'bank of america,desktop,Toronto,Ontario,Canada,10,true,true\n';
-        const blob = new Blob([csv], {type: 'text/csv'});
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = "serpient_template.csv";
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        window.URL.revokeObjectURL(url);
-    }
+    });
 
     // Handle import
     document.getElementById('importFile').addEventListener('change', function(e) {
-        const file e.target.files[0];
+        const file = e.target.files[0];
         if (!file) return;
         const reader = new FileReader();
         reader.onload = function(evt) {
@@ -488,7 +495,7 @@
             if (row.page_depth) document.getElementById('page_depth').value = row.page_depth;
             if (row.include_aio) document.getElementById('include_aio').checked = (row.include_aio.toLowerCase() === 'true');
             if (row.include_ads) document.getElementById('include_ads').checked = (row.include_ads.toLowerCase() === 'true');
-            // Trigger input event to update UI
+            // Trigger event to update UI
             keywords.dispatchEvent(new Event('input'));
         };
         reader.readAsText(file);
@@ -527,7 +534,7 @@
                 <td>${job.status}</td>
                 <td>${
                     job.status === 'Complete'
-                        ? `<a href="${job.downloadUrl}" download="serpient_results.csv">Download</a>`
+                        ? `<a href="${job.downloadUrl}" download="serpscraper_results.csv">Download</a>`
                         : ''
                 }</td>
             `;
@@ -594,13 +601,13 @@
             // Auto-download
             const a = document.createElement('a');
             a.href = url;
-            a.download = "serpient_results.csv";
+            a.download = "serpscraper_results.csv";
             document.body.appendChild(a);
             a.click();
             a.remove();
             window.URL.revokeObjectURL(url);
 
-            outputDiv.innerHTML = "<span style='color:green;'>Download started: <b>serpient_results.csv</b></span>";
+            outputDiv.innerHTML = "<span style='color:green;'>Download started: <b>serpscraper_results.csv</b></span>";
         } catch (err) {
             updateJobStatus(jobId, 'Error');
             outputDiv.innerHTML = "<span style='color:red;'>Error processing request.</span>";
