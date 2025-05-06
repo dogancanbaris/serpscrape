@@ -1,3 +1,8 @@
 flask
-requests
 gunicorn
+stripe
+flask-login
+flask-sqlalchemy
+werkzeug
+google-cloud-storage
+beautifulsoup4
