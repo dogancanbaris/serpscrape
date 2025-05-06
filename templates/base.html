@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>{% block title %}Serpscraper{% endblock %}</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen">
+  <nav class="bg-white shadow mb-8">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+      <div class="flex space-x-4">
+        <a href="{{ url_for('dashboard') }}" class="font-semibold text-gray-700 hover:text-blue-600">Dashboard</a>
+        <a href="{{ url_for('new_job') }}" class="font-semibold text-gray-700 hover:text-blue-600">New Job</a>
+        <a href="{{ url_for('account') }}" class="font-semibold text-gray-700 hover:text-blue-600">Account</a>
+        <a href="{{ url_for('payment') }}" class="font-semibold text-gray-700 hover:text-blue-600">Payment</a>
+      </div>
+      <div>
+        {% if current_user.is_authenticated %}
+          <span class="text-gray-600 mr-4">{{ current_user.username or current_user.email }}</span>
+          <a href="{{ url_for('logout') }}" class="text-red-600 hover:underline">Logout</a>
+        {% else %}
+          <a href="{{ url_for('login') }}" class="text-blue-600 hover:underline mr-2">Login</a>
+          <a href="{{ url_for('signup') }}" class="text-green-600 hover:underline">Sign Up</a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+  <div class="max-w-6xl mx-auto px-4">
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="mb-4 text-red-600">
+          {% for message in messages %}
+            <div>{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </div>
+</body>
+</html>

@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - Serpscraper{% endblock %}
+{% block content %}
+<div class="bg-gray-100 min-h-screen py-10">
+  <div class="max-w-7xl mx-auto px-4">
+    <h1 class="text-3xl font-bold mb-8">Welcome, {{ user.username or user.email }}!</h1>
+
+    <!-- Summary Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
+      <div class="bg-white shadow rounded-xl flex flex-col items-center justify-center py-8">
+        <div class="text-gray-500 mb-2">Plan</div>
+        <div class="text-2xl font-bold text-blue-700">
+          {{ user.plan or "Starter" }}
+        </div>
+      </div>
+      <div class="bg-white shadow rounded-xl flex flex-col items-center justify-center py-8">
+        <div class="text-gray-500 mb-2">Credits Left</div>
+        <div class="text-2xl font-bold text-green-700">
+          {{ "{:,}".format(user.credits) }} / {{ "{:,}".format(user.plan_total_credits) }}
+        </div>
+        <div class="text-xs text-gray-400">Left / Total</div>
+      </div>
+      <div class="bg-white shadow rounded-xl flex flex-col items-center justify-center py-8">
+        <div class="text-gray-500 mb-2">Jobs This Month</div>
+        <div class="text-2xl font-bold text-purple-700">
+          {{ jobs|length }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <div class="flex gap-4 mb-8">
+      <a href="{{ url_for('scraper') }}" class="bg-blue-700 hover:bg-blue-800 text-white px-6 py-2 rounded font-semibold shadow transition">Scraper</a>
+      <a href="{{ url_for('payment') }}" class="bg-green-700 hover:bg-green-800 text-white px-6 py-2 rounded font-semibold shadow transition">Plan & Credits</a>
+    </div>
+
+    <!-- Job History Card -->
+    <div class="bg-white shadow rounded-xl p-6">
+      <h2 class="text-xl font-semibold mb-4">Job History</h2>
+      <div class="overflow-x-auto">
+        <table class="min-w-full text-sm">
+          <thead>
+            <tr class="bg-gray-50">
+              <th class="px-4 py-2 text-left font-semibold">Date</th>
+              <th class="px-4 py-2 text-left font-semibold">Keywords</th>
+              <th class="px-4 py-2 text-left font-semibold">Device</th>
+              <th class="px-4 py-2 text-left font-semibold">Location</th>
+              <th class="px-4 py-2 text-left font-semibold">Status</th>
+              <th class="px-4 py-2 text-left font-semibold">Credits Used</th>
+              <th class="px-4 py-2 text-left font-semibold">Download</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for job in jobs %}
+            <tr>
+              <td class="px-4 py-2">{{ job.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+              <td class="px-4 py-2">{{ job.keywords }}</td>
+              <td class="px-4 py-2">{{ job.user_agent_type or "" }}</td>
+              <td class="px-4 py-2">{{ job.location or "" }}</td>
+              <td class="px-4 py-2">{{ job.status }}</td>
+              <td class="px-4 py-2">{{ job.credits_used }}</td>
+              <td class="px-4 py-2">
+                {% if job.result_file %}
+                  <a href="{{ url_for('download_result', filename=job.result_file) }}" class="text-green-600 hover:underline">Download</a>
+                {% else %}
+                  N/A
+                {% endif %}
+              </td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="7" class="text-center py-4 text-gray-400">No jobs yet.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

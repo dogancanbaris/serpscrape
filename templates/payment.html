@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block title %}Pricing & Plans - Serpscraper{% endblock %}
+{% block content %}
+
+<div class="max-w-6xl mx-auto px-4 py-10">
+  <h1 class="text-3xl font-bold mb-10 text-center">Choose Your Plan</h1>
+  <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+    {% for plan in plans %}
+    <div class="flex flex-col bg-white rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition group relative overflow-hidden p-6 max-w-xs mx-auto">
+      {% if plan.name == "Pro" %}
+        <div class="absolute top-0 right-0 bg-gradient-to-l from-blue-600 to-blue-400 text-white text-xs px-3 py-1 rounded-bl-2xl font-semibold z-10">Most Popular</div>
+      {% endif %}
+      <div class="flex items-center justify-center mb-4">
+        <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
+          <path d="M8 12l2 2l4-4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h2 class="text-xl font-bold text-gray-800 text-center mb-2">{{ plan.name }}</h2>
+      <div class="text-3xl font-extrabold text-blue-700 mb-2 text-center">${{ plan.price }}</div>
+      <div class="text-gray-500 mb-4 text-center">{{ "{:,}".format(plan.credits) }} credits</div>
+      <ul class="mb-6 space-y-1 text-gray-700 text-sm">
+        <li><span class="font-semibold">{{ "{:,}".format(plan.credits) }}</span> keywords (organic only)</li>
+        <li><span class="font-semibold">{{ "{:,}".format(plan.credits // 2) }}</span> keywords (org + AIO or Ads)</li>
+        <li><span class="font-semibold">{{ "{:,}".format(plan.credits // 3) }}</span> keywords (all 3 options)</li>
+      </ul>
+      <form action="{{ url_for('create_checkout_session') }}" method="POST" class="mt-auto">
+        <input type="hidden" name="stripe_price_id" value="{{ plan.stripe_price_id }}">
+        <button class="w-full py-2 px-4 rounded-xl bg-gradient-to-r from-blue-500 to-blue-700 text-white font-semibold shadow hover:from-blue-600 hover:to-blue-800 transition">Buy Now</button>
+      </form>
+    </div>
+    {% endfor %}
+
+    <!-- Pay As You Go -->
+    <div class="flex flex-col bg-white rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition group relative overflow-hidden p-6 max-w-xs mx-auto">
+      <div class="absolute top-0 right-0 bg-gradient-to-l from-green-600 to-green-400 text-white text-xs px-3 py-1 rounded-bl-2xl font-semibold z-10">Flexible</div>
+      <div class="flex items-center justify-center mb-4">
+        <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <rect x="3" y="3" width="18" height="18" rx="4" stroke="currentColor" stroke-width="2" fill="none"/>
+          <path d="M12 8v8M8 12h8" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h2 class="text-xl font-bold text-gray-800 text-center mb-2">Pay As You Go</h2>
+      <div class="text-2xl font-bold text-green-700 mb-2 text-center">$7.50 <span class="text-sm font-normal text-gray-500">/ 1,000 credits</span></div>
+      <div class="mb-4 text-gray-500 text-center">Enter credits below</div>
+      <input type="number" id="payg-credits" min="1000" step="1000" value="1000" class="w-full border rounded p-2 mb-2 text-center" placeholder="Enter credits">
+      <div class="mb-2 text-gray-600 text-xs text-center">Min 1,000 credits</div>
+      <div class="mb-2 text-lg text-center"><span id="payg-price">$0.00</span></div>
+      <div class="mb-2 text-gray-600 text-xs text-center">
+        <span id="payg-org"></span> keywords (organic only) &bull;
+        <span id="payg-2x"></span> (org + AIO or Ads) &bull;
+        <span id="payg-3x"></span> (all 3)
+      </div>
+      <form id="payg-form" action="{{ url_for('create_payg_checkout') }}" method="POST" class="mt-auto">
+        <input type="hidden" name="credits" id="payg-credits-hidden" value="1000">
+        <input type="hidden" name="price" id="payg-price-hidden" value="0">
+        <button class="w-full py-2 px-4 rounded-xl bg-gradient-to-r from-green-500 to-green-700 text-white font-semibold shadow hover:from-green-600 hover:to-green-800 transition">Buy Credits</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-2xl shadow p-6 mb-6 mt-12 max-w-2xl mx-auto">
+    <h3 class="text-lg font-semibold mb-2 text-blue-700">How Credits Work</h3>
+    <ul class="list-disc pl-6 mb-2 text-gray-700 text-sm">
+      <li>1 keyword, organic only: <span class="font-semibold">1 credit</span></li>
+      <li>1 keyword, organic + AIO or Ads: <span class="font-semibold">2 credits</span></li>
+      <li>1 keyword, organic + AIO + Ads: <span class="font-semibold">3 credits</span></li>
+    </ul>
+    <p class="text-xs text-gray-500">
+      Example: Crawling 10,000 keywords with all options = 30,000 credits.
+    </p>
+  </div>
+</div>
+
+<script>
+  function getPaygPrice(credits) {
+    return (credits / 1000 * 7.5).toFixed(2);
+  }
+  const paygInput = document.getElementById('payg-credits');
+  const paygPrice = document.getElementById('payg-price');
+  const paygCreditsHidden = document.getElementById('payg-credits-hidden');
+  const paygPriceHidden = document.getElementById('payg-price-hidden');
+  const paygOrg = document.getElementById('payg-org');
+  const payg2x = document.getElementById('payg-2x');
+  const payg3x = document.getElementById('payg-3x');
+  paygInput.addEventListener('input', function() {
+    let credits = parseInt(paygInput.value) || 0;
+    if (credits < 1000) credits = 1000;
+    paygInput.value = credits;
+    let price = getPaygPrice(credits);
+    paygPrice.textContent = `$${price}`;
+    paygCreditsHidden.value = credits;
+    paygPriceHidden.value = price;
+    paygOrg.textContent = `${credits}`;
+    payg2x.textContent = `${Math.floor(credits/2)}`;
+    payg3x.textContent = `${Math.floor(credits/3)}`;
+  });
+  paygInput.dispatchEvent(new Event('input'));
+</script>
+{% endblock %}

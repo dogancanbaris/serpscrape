@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Close Account - Serpscraper{% endblock %}
+{% block content %}
+<div class="max-w-md mx-auto bg-white rounded shadow p-8 mt-8">
+  <h2 class="text-xl font-bold mb-4 text-red-700">Close Account</h2>
+  <p class="mb-6 text-gray-700">Are you sure you want to close your account? This action is <strong>irreversible</strong> and will delete all your data.</p>
+  <form method="post">
+    <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 rounded">Yes, Close My Account</button>
+  </form>
+</div>
+{% endblock %}

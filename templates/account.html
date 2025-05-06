@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Account - Serpscraper{% endblock %}
+{% block content %}
+<div class="max-w-xl mx-auto bg-white rounded shadow p-8 mt-8">
+  <h1 class="text-2xl font-bold mb-6">Account Settings</h1>
+  <div class="mb-6">
+    <div class="mb-2"><span class="font-semibold">Username:</span> {{ current_user.username }}</div>
+    <div class="mb-2"><span class="font-semibold">Email:</span> {{ current_user.email }}</div>
+  </div>
+  <div class="flex flex-col gap-3">
+    <a href="{{ url_for('change_password') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-center font-semibold">Change Password</a>
+    <a href="{{ url_for('close_account') }}" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded text-center font-semibold">Close Account</a>
+  </div>
+</div>
+{% endblock %}

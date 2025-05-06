@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Import Keywords - Serpscraper{% endblock %}
+{% block content %}
+<div class="max-w-md mx-auto py-16">
+  <h2 class="text-2xl font-bold mb-6">Import Keywords</h2>
+  <p class="mb-4">Upload a CSV with your keywords. Example format:</p>
+  <pre class="bg-white p-4 rounded shadow mb-4">
+keyword,device,location,page_depth,include_aio,include_ads
+"best cafe",desktop,Toronto,10,true,true
+"coffee shops",mobile,London,20,false,true
+  </pre>
+  <a href="{{ url_for('dashboard') }}" class="text-blue-600 hover:underline">Back to Dashboard</a>
+</div>
+{% endblock %}

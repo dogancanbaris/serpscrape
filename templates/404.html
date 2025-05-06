@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}404 Not Found - Serpscraper{% endblock %}
+{% block content %}
+<div class="max-w-xl mx-auto py-16 text-center">
+  <h1 class="text-4xl font-bold mb-4">404</h1>
+  <p class="mb-8">Sorry, the page you requested was not found.</p>
+  <a href="{{ url_for('index') }}" class="bg-blue-600 text-white px-6 py-2 rounded">Go Home</a>
+</div>
+{% endblock %}
