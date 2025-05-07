@@ -6,23 +6,23 @@
     <h1 class="text-3xl font-bold mb-8">Welcome, {{ user.username or user.email }}!</h1>
 
     <!-- Summary Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
-      <div class="bg-white shadow rounded-xl flex flex-col items-center justify-center py-8">
+    <div class="flex flex-col md:flex-row justify-center items-center gap-8 mb-10">
+      <div class="bg-white shadow rounded-2xl flex flex-col items-center justify-center py-10 px-16 mb-4 md:mb-0">
         <div class="text-gray-500 mb-2">Plan</div>
         <div class="text-2xl font-bold text-blue-700">
           {{ user.plan or "Starter" }}
         </div>
       </div>
-      <div class="bg-white shadow rounded-xl flex flex-col items-center justify-center py-8">
+      <div class="bg-white shadow rounded-2xl flex flex-col items-center justify-center py-10 px-16 mb-4 md:mb-0">
         <div class="text-gray-500 mb-2">Credits Left</div>
         <div class="text-2xl font-bold text-green-700">
           {{ "{:,}".format(user.credits) }} / {{ "{:,}".format(user.plan_total_credits) }}
         </div>
         <div class="text-xs text-gray-400">Left / Total</div>
       </div>
-      <div class="bg-white shadow rounded-xl flex flex-col items-center justify-center py-8">
+      <div class="bg-white shadow rounded-2xl flex flex-col items-center justify-center py-10 px-16">
         <div class="text-gray-500 mb-2">Jobs This Month</div>
-        <div class="text-2xl font-bold text-purple-700">
+        <div class="text-2xl font-bold" style="color: #7c3aed;">
           {{ jobs|length }}
         </div>
       </div>
@@ -30,24 +30,25 @@
 
     <!-- Navigation Buttons -->
     <div class="flex gap-4 mb-8">
-      <a href="{{ url_for('scraper') }}" class="bg-blue-700 hover:bg-blue-800 text-white px-6 py-2 rounded font-semibold shadow transition">Scraper</a>
+      <a href="{{ url_for('scraper') }}" class="bg-blue-700 hover:bg-blue-800 text-white px-6 py-2 rounded font-semibold shadow transition">New Batch Job</a>
       <a href="{{ url_for('payment') }}" class="bg-green-700 hover:bg-green-800 text-white px-6 py-2 rounded font-semibold shadow transition">Plan & Credits</a>
+      <a href="{{ url_for('playground') }}" class="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded font-semibold shadow transition">API Playground</a>
     </div>
 
     <!-- Job History Card -->
-    <div class="bg-white shadow rounded-xl p-6">
+    <div class="bg-white shadow rounded-2xl p-6 max-w-5xl mx-auto">
       <h2 class="text-xl font-semibold mb-4">Job History</h2>
       <div class="overflow-x-auto">
         <table class="min-w-full text-sm">
           <thead>
             <tr class="bg-gray-50">
-              <th class="px-4 py-2 text-left font-semibold">Date</th>
-              <th class="px-4 py-2 text-left font-semibold">Keywords</th>
-              <th class="px-4 py-2 text-left font-semibold">Device</th>
-              <th class="px-4 py-2 text-left font-semibold">Location</th>
-              <th class="px-4 py-2 text-left font-semibold">Status</th>
-              <th class="px-4 py-2 text-left font-semibold">Credits Used</th>
-              <th class="px-4 py-2 text-left font-semibold">Download</th>
+              <th class="px-4 py-2 text-left font-bold">Date</th>
+              <th class="px-4 py-2 text-left font-bold">Keywords</th>
+              <th class="px-4 py-2 text-left font-bold">Device</th>
+              <th class="px-4 py-2 text-left font-bold">Location</th>
+              <th class="px-4 py-2 text-left font-bold">Status</th>
+              <th class="px-4 py-2 text-left font-bold">Credits Used</th>
+              <th class="px-4 py-2 text-left font-bold">Download</th>
             </tr>
           </thead>
           <tbody>
@@ -57,13 +58,29 @@
               <td class="px-4 py-2">{{ job.keywords }}</td>
               <td class="px-4 py-2">{{ job.user_agent_type or "" }}</td>
               <td class="px-4 py-2">{{ job.location or "" }}</td>
-              <td class="px-4 py-2">{{ job.status }}</td>
+              <td class="px-4 py-2">
+                {% if job.status == "pending" %}
+                  <span class="inline-block px-2 py-1 bg-yellow-200 text-yellow-800 rounded font-semibold">Pending</span>
+                {% elif job.status == "processing" %}
+                  <span class="inline-block px-2 py-1 bg-blue-200 text-blue-800 rounded font-semibold">Processing</span>
+                {% elif job.status == "ready" %}
+                  <span class="inline-block px-2 py-1 bg-green-200 text-green-800 rounded font-semibold">Ready</span>
+                {% elif job.status == "finished" %}
+                  <span class="inline-block px-2 py-1 bg-green-300 text-green-900 rounded font-semibold">Finished</span>
+                {% elif job.status == "failed" %}
+                  <span class="inline-block px-2 py-1 bg-red-200 text-red-800 rounded font-semibold">Failed</span>
+                {% else %}
+                  <span class="inline-block px-2 py-1 bg-gray-200 text-gray-800 rounded font-semibold">{{ job.status|capitalize }}</span>
+                {% endif %}
+              </td>
               <td class="px-4 py-2">{{ job.credits_used }}</td>
               <td class="px-4 py-2">
-                {% if job.result_file %}
+                {% if job.status in ["ready", "finished"] and job.result_file %}
                   <a href="{{ url_for('download_result', filename=job.result_file) }}" class="text-green-600 hover:underline">Download</a>
+                {% elif job.status in ["ready", "finished"] %}
+                  <a href="{{ url_for('download_batch', job_id=job.id) }}" class="text-blue-600 hover:underline">Process & Download</a>
                 {% else %}
-                  N/A
+                  <span class="text-gray-400">{{ job.status|capitalize }}</span>
                 {% endif %}
               </td>
             </tr>

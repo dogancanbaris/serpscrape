@@ -1,83 +1,108 @@
 {% extends "base.html" %}
-{% block title %}Create a New SERP Job - Serpscraper{% endblock %}
+{% block title %}New SERP Batch Job - Serpscraper{% endblock %}
 {% block content %}
-<div class="max-w-2xl mx-auto py-10">
-  <h1 class="text-2xl font-bold mb-8">Create a New SERP Job</h1>
-  <form method="post" enctype="multipart/form-data" class="bg-white shadow rounded-xl p-8 space-y-6">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div>
-        <label class="block font-semibold mb-1">Search Engine</label>
-        <select name="search_engine" class="w-full border rounded p-2" required>
-          {% for val, label in search_engines %}
-            <option value="{{ val }}">{{ label }}</option>
-          {% endfor %}
-        </select>
-      </div>
-      <div>
-        <label class="block font-semibold mb-1">Device</label>
-        <select name="user_agent_type" class="w-full border rounded p-2">
-          {% for val, label in user_agent_types %}
-            <option value="{{ val }}">{{ label }}</option>
-          {% endfor %}
-        </select>
-      </div>
-      <div>
-        <label class="block font-semibold mb-1">Location</label>
-        <input name="location" class="w-full border rounded p-2" placeholder="e.g. Toronto, Ontario, Canada" required>
-      </div>
-      <div>
-        <label class="block font-semibold mb-1">Page Depth</label>
-        <select name="page_depth" class="w-full border rounded p-2">
-          <option value="10">10 positions</option>
-          <option value="20">20 positions</option>
-          <option value="30">30 positions</option>
-          <option value="50">50 positions</option>
-          <option value="100">100 positions</option>
-        </select>
-      </div>
-      <div>
-        <label class="block font-semibold mb-1">Language (hl)</label>
-        <select name="hl" class="w-full border rounded p-2">
-          <option value="en">English</option>
-          <option value="fr">French</option>
-          <option value="es">Spanish</option>
-          <!-- Add more as needed -->
-        </select>
-      </div>
-      <div>
-        <label class="block font-semibold mb-1">Country (gl)</label>
-        <select name="gl" class="w-full border rounded p-2">
-          <option value="ca">Canada</option>
-          <option value="us">United States</option>
-          <option value="uk">United Kingdom</option>
-          <!-- Add more as needed -->
-        </select>
+<div class="bg-gray-100 min-h-screen py-10">
+  <div class="max-w-6xl mx-auto px-4 flex flex-col lg:flex-row gap-10">
+    <!-- Form Card -->
+    <div class="w-full lg:w-2/3 bg-white shadow-2xl rounded-2xl p-10">
+      <h1 class="text-3xl font-bold mb-6 text-blue-700 flex items-center gap-2">
+        <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M8 12l2 2l4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Create New Batch SERP Job
+      </h1>
+      <form method="post" enctype="multipart/form-data" class="space-y-6">
+        <!-- Search Engine -->
+        <div>
+          <label class="block font-semibold mb-1">Search Engine</label>
+          <select name="search_engine" class="w-full border rounded p-2" required>
+            {% for val, label in search_engines %}
+              <option value="{{ val }}">{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <!-- Device -->
+        <div>
+          <label class="block font-semibold mb-1">Device</label>
+          <select name="user_agent_type" class="w-full border rounded p-2">
+            {% for val, label in user_agent_types %}
+              <option value="{{ val }}">{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <!-- Location -->
+        <div>
+          <label class="block font-semibold mb-1">Location</label>
+          <input name="location" class="w-full border rounded p-2" placeholder="e.g. Toronto, Ontario, Canada" required>
+        </div>
+        <!-- Page Depth -->
+        <div>
+          <label class="block font-semibold mb-1">Page Depth</label>
+          <select name="page_depth" class="w-full border rounded p-2">
+            <option value="10">10 positions</option>
+            <option value="20">20 positions</option>
+            <option value="30">30 positions</option>
+            <option value="50">50 positions</option>
+            <option value="100">100 positions</option>
+          </select>
+        </div>
+        <!-- Language/Country -->
+        <div class="flex gap-4">
+          <div class="w-1/2">
+            <label class="block font-semibold mb-1">Language (hl)</label>
+            <select name="hl" class="w-full border rounded p-2">
+              <option value="en">English</option>
+              <option value="fr">French</option>
+              <option value="es">Spanish</option>
+            </select>
+          </div>
+          <div class="w-1/2">
+            <label class="block font-semibold mb-1">Country (gl)</label>
+            <select name="gl" class="w-full border rounded p-2">
+              <option value="ca">Canada</option>
+              <option value="us">United States</option>
+              <option value="uk">United Kingdom</option>
+            </select>
+          </div>
+        </div>
+        <!-- Keywords -->
+        <div>
+          <label class="block font-semibold mb-1">Keywords</label>
+          <textarea name="keywords" rows="3" class="w-full border rounded p-2" placeholder="Enter keywords, one per line"></textarea>
+          <div class="text-xs text-gray-500 mt-1">* 1–10,000 keywords per job</div>
+        </div>
+        <!-- File Upload -->
+        <div>
+          <label class="block font-semibold mb-1">Or Import CSV</label>
+          <input type="file" name="csv_file" accept=".csv"
+            class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
+        </div>
+        <!-- Submit -->
+        <div class="flex gap-4 mt-4">
+          <button type="submit" class="bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-6 rounded shadow transition">Submit</button>
+          <a href="{{ url_for('download_batch_template') }}" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-5 py-2 rounded font-semibold">
+			Download CSV Template
+		  </a>
+
+        </div>
+      </form>
+    </div>
+
+    <!-- Info Card -->
+    <div class="w-full lg:w-1/3 flex flex-col gap-6">
+      <div class="bg-white shadow-xl rounded-2xl p-8">
+        <h2 class="text-xl font-bold text-green-700 mb-2 flex items-center">
+          <svg class="w-6 h-6 mr-2 text-green-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M8 12l2 2l4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Credit System
+        </h2>
+        <ul class="list-disc pl-6 text-gray-700 mb-2">
+          <li>1 credit per keyword: <span class="font-semibold">Organic only</span></li>
+          <li>2 credits per keyword: <span class="font-semibold">Ads OR AI Overview</span> found in results</li>
+          <li>3 credits per keyword: <span class="font-semibold">Both Ads AND AI Overview</span> found in results</li>
+        </ul>
+        <div class="text-xs text-gray-700">
+          <strong>Important:</strong> You are always charged 3 credits per keyword up front, but after processing, <span class="text-green-700 font-semibold">unused credits are automatically refunded</span> if ads and/or AI Overview are missing from the returned results.
+        </div>
       </div>
     </div>
-    <div class="flex items-center gap-6">
-      <label class="inline-flex items-center">
-        <input type="checkbox" name="include_aio" value="true" class="form-checkbox mr-2" checked>
-        Include AI Overview (SGE)
-      </label>
-      <label class="inline-flex items-center">
-        <input type="checkbox" name="include_ads" value="true" class="form-checkbox mr-2" checked>
-        Include Ads
-      </label>
-    </div>
-    <div>
-      <label class="block font-semibold mb-1">Keywords</label>
-      <textarea name="keywords" rows="3" class="w-full border rounded p-2" placeholder="Enter keywords, one per line"></textarea>
-      <div class="text-xs text-gray-500 mt-1">* 1–10,000 keywords per job</div>
-    </div>
-    <div>
-      <label class="block font-semibold mb-1">Or Import CSV</label>
-      <input type="file" name="csv_file" accept=".csv" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
-    </div>
-    <div class="flex gap-4 mt-4">
-      <button type="submit" class="bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-6 rounded">Submit</button>
-      <a href="{{ url_for('import_example') }}" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-5 py-2 rounded font-semibold">Import Example</a>
-      <a href="{{ url_for('download_template') }}" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-5 py-2 rounded font-semibold">Download Template</a>
-    </div>
-  </form>
+  </div>
 </div>
 {% endblock %}

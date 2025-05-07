@@ -1,0 +1,251 @@
+{% extends "base.html" %}
+{% macro render_serp(json) %}
+  <div class="w-full max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-10">
+    {% if json.ai_overview %}
+      <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6 rounded">
+        <div class="font-semibold text-blue-700 mb-1">AI Overview</div>
+        <div class="text-gray-800">{{ json.ai_overview }}</div>
+      </div>
+    {% endif %}
+    {% if json.ads %}
+      <div class="mb-6">
+        {% for ad in json.ads %}
+          <div class="mb-3 py-2 px-3 border rounded hover:shadow transition bg-yellow-50">
+            <div class="text-xs text-gray-500 mb-1">Ad</div>
+            <a href="{{ ad.link }}" class="font-bold text-blue-700 hover:underline" target="_blank">{{ ad.title }}</a>
+            <div class="text-xs text-green-700">{{ ad.link }}</div>
+            <div class="text-gray-700 mt-1">{{ ad.description }}</div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+    {% if json.organic_results %}
+      <div class="mb-6">
+        {% for result in json.organic_results %}
+          <div class="mb-5 pb-2 border-b last:border-b-0 last:mb-0">
+            <a href="{{ result.link }}" class="block font-bold text-xl text-blue-800 hover:underline" target="_blank">{{ result.title }}</a>
+            <div class="text-xs text-green-700 mb-1">{{ result.link }}</div>
+            <div class="text-gray-700">{{ result.snippet }}</div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+    {% if json.people_also_ask %}
+      <div class="mb-6">
+        <div class="font-semibold text-gray-700 mb-2">People Also Ask</div>
+        <ul class="space-y-2">
+          {% for paa in json.people_also_ask %}
+            <li class="bg-gray-50 px-3 py-2 rounded border">{{ paa.question }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+    {% if json.local_results %}
+      <div class="mb-6">
+        <div class="font-semibold text-gray-700 mb-2">Local Results</div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {% for local in json.local_results %}
+            <div class="border rounded-lg p-3 bg-slate-50">
+              <div class="font-bold text-blue-700">{{ local.title }}</div>
+              <div class="text-xs text-gray-500">{{ local.address }}</div>
+              <a href="{{ local.link }}" class="text-xs text-green-700 hover:underline" target="_blank">{{ local.link }}</a>
+              <div class="text-gray-700 mt-1">{{ local.description }}</div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+    {% if json.shopping_results %}
+      <div class="mb-6">
+        <div class="font-semibold text-gray-700 mb-2">Shopping Results</div>
+        <div class="flex flex-wrap gap-3">
+          {% for product in json.shopping_results %}
+            <div class="border rounded-lg p-3 bg-white w-60">
+              <div class="font-bold text-blue-700 mb-1">{{ product.title }}</div>
+              {% if product.price %}<div class="text-green-700 font-semibold mb-1">{{ product.price }}</div>{% endif %}
+              <a href="{{ product.link }}" class="text-xs text-green-700 hover:underline" target="_blank">{{ product.link }}</a>
+              <div class="text-gray-700 mt-1">{{ product.description }}</div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+{% endmacro %}
+
+{% block title %}API Playground - Serpscraper{% endblock %}
+{% block content %}
+<div class="bg-[#f7f9fa] min-h-screen flex flex-col items-center py-12">
+  <div class="w-full max-w-screen-2xl mx-auto">
+    <div class="mb-8 px-4 md:px-0">
+      <div class="bg-blue-50 border border-blue-200 text-blue-900 px-10 py-6 rounded-lg flex items-center gap-2 text-lg shadow">
+        <span class="font-bold text-blue-600">API Playground</span>
+        <span class="ml-4">Test ValueSERP's <span class="font-semibold text-blue-700">real-time API</span> here. Enter your query and settings on the left, submit, and see live Google results (HTML, a pretty JSON preview, or CSV) on the right. No credits are charged for playground usage.</span>
+      </div>
+    </div>
+    <div class="w-full grid grid-cols-1 xl:grid-cols-2 gap-16">
+      <form method="post" class="bg-white rounded-2xl shadow-xl p-16 flex flex-col gap-6 text-lg w-full min-h-[1000px] max-w-[1100px] mx-auto">
+        <!-- ... all your fields as before ... -->
+        <div>
+          <label class="block font-semibold mb-1">Search Type</label>
+          <select name="search_type" class="w-full border rounded p-3 text-lg">
+            <option value="search">Google Web Search</option>
+            <option value="news">Google News</option>
+            <option value="images">Google Images</option>
+            <option value="videos">Google Videos</option>
+            <option value="places">Places</option>
+            <option value="shopping">Shopping</option>
+          </select>
+        </div>
+        <div>
+          <label class="block font-semibold mb-1">Search Query</label>
+          <input name="q" class="w-full border rounded p-3 text-lg" placeholder="e.g. buy engagement ring" required>
+        </div>
+        <div class="flex gap-4">
+          <div class="flex-1">
+            <label class="block font-semibold mb-1">AI Overview</label>
+            <select name="include_ai_overview" class="w-full border rounded p-3 text-lg">
+              <option value="true">True</option>
+              <option value="false">False</option>
+            </select>
+          </div>
+          <div class="flex-1">
+            <label class="block font-semibold mb-1">Include Ads</label>
+            <select name="include_ads" class="w-full border rounded p-3 text-lg">
+              <option value="true">True</option>
+              <option value="false">False</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="block font-semibold mb-1">Location</label>
+          <input name="location" class="w-full border rounded p-3 text-lg" placeholder="e.g. Toronto, Ontario, Canada">
+        </div>
+        <div class="flex gap-4">
+          <div class="flex-1">
+            <label class="block font-semibold mb-1">Google Domain</label>
+            <select name="google_domain" class="w-full border rounded p-3 text-lg">
+              <option value="google.com">google.com</option>
+              <option value="google.ca">google.ca</option>
+              <option value="google.co.uk">google.co.uk</option>
+            </select>
+          </div>
+          <div class="flex-1">
+            <label class="block font-semibold mb-1">Country (gl)</label>
+            <select name="gl" class="w-full border rounded p-3 text-lg">
+              <option value="us">United States</option>
+              <option value="ca">Canada</option>
+              <option value="uk">United Kingdom</option>
+            </select>
+          </div>
+          <div class="flex-1">
+            <label class="block font-semibold mb-1">Language (hl)</label>
+            <select name="hl" class="w-full border rounded p-3 text-lg">
+              <option value="en">English</option>
+              <option value="fr">French</option>
+              <option value="es">Spanish</option>
+            </select>
+          </div>
+        </div>
+        <div class="flex gap-4">
+          <div class="flex-1">
+            <label class="block font-semibold mb-1">Time Period</label>
+            <input name="time_period" class="w-full border rounded p-3 text-lg" placeholder="e.g. past_month">
+          </div>
+          <div class="flex-1">
+            <label class="block font-semibold mb-1">Device</label>
+            <select name="device" class="w-full border rounded p-3 text-lg">
+              <option value="desktop">Desktop</option>
+              <option value="mobile">Mobile</option>
+              <option value="tablet">Tablet</option>
+            </select>
+          </div>
+          <div class="flex-1">
+            <label class="block font-semibold mb-1">Answer Box</label>
+            <select name="include_answer_box" class="w-full border rounded p-3 text-lg">
+              <option value="">Default</option>
+              <option value="true">True</option>
+              <option value="false">False</option>
+            </select>
+          </div>
+        </div>
+        <div class="flex gap-4">
+          <div class="flex-1">
+            <label class="block font-semibold mb-1">Flatten Results</label>
+            <select name="flatten_results" class="w-full border rounded p-3 text-lg">
+              <option value="">Default</option>
+              <option value="true">True</option>
+              <option value="false">False</option>
+            </select>
+          </div>
+          <div class="flex-1">
+            <label class="block font-semibold mb-1">Filter</label>
+            <input name="filter" class="w-full border rounded p-3 text-lg" placeholder="e.g. news,web">
+          </div>
+          <div class="flex-1">
+            <label class="block font-semibold mb-1">Sort By</label>
+            <input name="sort_by" class="w-full border rounded p-3 text-lg" placeholder="e.g. sort_by">
+          </div>
+        </div>
+        <div class="flex gap-4">
+          <div class="flex-1">
+            <label class="block font-semibold mb-1">Page</label>
+            <input name="page" class="w-full border rounded p-3 text-lg" placeholder="1">
+          </div>
+          <div class="flex-1">
+            <label class="block font-semibold mb-1">Num Results</label>
+            <input name="num" class="w-full border rounded p-3 text-lg" placeholder="10">
+          </div>
+          <div class="flex-1">
+            <label class="block font-semibold mb-1">Max Page</label>
+            <input name="max_page" class="w-full border rounded p-3 text-lg" placeholder="2">
+          </div>
+        </div>
+        <div class="flex gap-4">
+          <div class="flex-1">
+            <label class="block font-semibold mb-1">Output</label>
+            <select name="output" class="w-full border rounded p-3 text-lg">
+              <option value="html">HTML</option>
+              <option value="json">JSON</option>
+              <option value="csv">CSV</option>
+            </select>
+          </div>
+          <div class="flex-1">
+            <label class="block font-semibold mb-1">Include Raw HTML</label>
+            <select name="include_raw_html" class="w-full border rounded p-3 text-lg">
+              <option value="">Default</option>
+              <option value="true">True</option>
+              <option value="false">False</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="block font-semibold mb-1">Cookie</label>
+          <input name="cookie" class="w-full border rounded p-3 text-lg" placeholder="cookie">
+        </div>
+        <div class="flex justify-end">
+          <button type="submit" class="bg-orange-200 hover:bg-orange-300 text-gray-900 font-bold px-10 py-4 rounded-lg shadow transition text-2xl mt-6">
+            Send API Request
+          </button>
+        </div>
+      </form>
+      <div class="bg-white rounded-2xl shadow-xl p-16 flex flex-col min-h-[1000px] text-lg w-full max-w-[1100px] mx-auto">
+        <div class="font-semibold text-gray-700 text-2xl mb-6">Output</div>
+        <div class="flex-1">
+          {% if error %}
+            <div class="bg-red-100 text-red-700 p-4 rounded">{{ error }}</div>
+          {% elif output_type == 'html' and result_html %}
+            <iframe srcdoc="{{ result_html|e }}" style="width:100%;height:700px;border:none;"></iframe>
+          {% elif output_type == 'json' and result_json %}
+            {{ render_serp(result_json) }}
+          {% elif output_type == 'csv' and result_csv %}
+            <pre class="bg-gray-900 text-yellow-200 text-xs rounded p-4 overflow-x-auto">{{ result_csv }}</pre>
+          {% else %}
+            <div class="text-gray-400 text-center py-20 text-lg">No output yet. Submit a request above.</div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
