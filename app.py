@@ -315,6 +315,12 @@ def index():
     return redirect(url_for('login'))
     # or: return render_template('index.html')
 
+@app.route("/init-db")
+def init_db_route():
+    db.create_all()
+    return "Database initialized!"
+
+
 @app.route('/playground', methods=['GET', 'POST'])
 @login_required
 def playground():
