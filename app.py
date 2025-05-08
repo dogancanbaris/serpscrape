@@ -709,7 +709,6 @@ def scraper():
             search_engine=search_engine,
             status="finished",
             result_file=gcs_filename,  # store GCS path!
-            result_file=filename,
             credits_used=actual_credits_used,
             batch_id=None,
             mode="batch"
