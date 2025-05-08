@@ -695,6 +695,11 @@ def scraper():
                     if field not in row:
                         row[field] = ""
                 writer.writerow(row)
+        
+        gcs_filename = f"results/user_{current_user.id}/{filename}"
+        print(f"[GCS UPLOAD] About to upload {local_path} to {gcs_filename} in bucket {GCS_BUCKET_NAME}")
+        upload_to_gcs(local_path, gcs_filename)
+        print(f"[GCS UPLOAD] Upload complete for {gcs_filename}")
 
         job = Job(
             user_id=current_user.id,
