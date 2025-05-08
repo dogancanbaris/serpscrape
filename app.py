@@ -6,6 +6,9 @@ import json
 import time
 import requests
 from urllib.parse import urlparse
+from flask import send_file, redirect
+from google.cloud import storage
+from tempfile import NamedTemporaryFile
 from bs4 import BeautifulSoup
 from flask import Flask, render_template, redirect, url_for, request, flash, send_from_directory, send_file
 from flask_sqlalchemy import SQLAlchemy
@@ -20,6 +23,18 @@ try:
     load_dotenv()
 except ImportError:
     pass
+
+GCS_BUCKET_NAME = os.environ.get('GCS_BUCKET_NAME')  # set this in your Render env vars
+
+# For Render: store credentials JSON in env var, use from_service_account_info
+credentials_json = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS_JSON')
+if credentials_json:
+    from google.oauth2 import service_account
+    credentials = service_account.Credentials.from_service_account_info(json.loads(credentials_json))
+    gcs_client = storage.Client(credentials=credentials)
+else:
+    gcs_client = storage.Client()
+gcs_bucket = gcs_client.bucket(GCS_BUCKET_NAME)
 
 # ==== Config ====
 app = Flask(__name__)
@@ -115,6 +130,16 @@ def calculate_credits(include_ads, include_aio):
         return 2
     else:
         return 1
+        
+def upload_to_gcs(local_path, gcs_filename):
+    blob = gcs_bucket.blob(gcs_filename)
+    blob.upload_from_filename(local_path)
+    print(f"Uploaded {local_path} to gs://{GCS_BUCKET_NAME}/{gcs_filename}")
+
+def get_signed_url(gcs_filename, expiration=3600):
+    blob = gcs_bucket.blob(gcs_filename)
+    return blob.generate_signed_url(expiration=expiration)
+
         
 @app.route('/download_batch/<int:job_id>')
 @login_required
@@ -250,9 +275,8 @@ def download_batch(job_id):
         flash(f"Job finished! {actual_credits_used} credits used.", "info")
 
     # Write export CSV
-    filename = f"{job.batch_id}_export.csv"
-    filepath = os.path.join("results", filename)
-    with open(filepath, "w", newline='', encoding="utf-8") as f:
+    local_path = f"/tmp/{filename}"
+    with open(local_path, "w", newline='', encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames, extrasaction='ignore')
         writer.writeheader()
         for row in results:
@@ -662,9 +686,8 @@ def scraper():
             "page", "absolute_position", "organic_position"
         ]
         filename = f"job_{current_user.id}_{secure_filename('_'.join(keywords[:3]))}_valueserp.csv"
-        filepath = os.path.join("results", filename)
-        os.makedirs("results", exist_ok=True)
-        with open(filepath, "w", newline='', encoding="utf-8") as f:
+        local_path = f"/tmp/{filename}"  # Always use /tmp in cloud
+        with open(local_path, "w", newline='', encoding="utf-8") as f:
             writer = csv.DictWriter(f, fieldnames=fieldnames, extrasaction='ignore')
             writer.writeheader()
             for row in all_results:
@@ -680,6 +703,7 @@ def scraper():
             location=location,
             search_engine=search_engine,
             status="finished",
+            result_file=gcs_filename,  # store GCS path!
             result_file=filename,
             credits_used=actual_credits_used,
             batch_id=None,
@@ -697,10 +721,12 @@ def scraper():
         user_agent_types=user_agent_types
     )
 
-@app.route('/results/<filename>')
+@app.route('/results/<path:filename>')
 @login_required
 def download_result(filename):
-    return send_from_directory('results', filename, as_attachment=True)
+    # filename is the GCS path stored in Job.result_file
+    signed_url = get_signed_url(filename)
+    return redirect(signed_url)
 
 @app.route('/account', methods=['GET', 'POST'])
 @login_required
