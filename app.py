@@ -339,12 +339,6 @@ def index():
     return redirect(url_for('login'))
     # or: return render_template('index.html')
 
-@app.route("/init-db")
-def init_db_route():
-    db.create_all()
-    return "Database initialized!"
-
-
 @app.route('/playground', methods=['GET', 'POST'])
 @login_required
 def playground():
@@ -624,7 +618,17 @@ def scraper():
         gl = request.form.get('gl', 'us').strip()
         page_depth = int(request.form.get('page_depth', 10))
 
-        credits_per_keyword = 3
+        # NEW: Read checkboxes for AI Overview and Ads
+        include_ai_overview = request.form.get('include_ai_overview') == 'true'
+        include_ads = request.form.get('include_ads') == 'true'
+
+        # NEW: Credit logic
+        if include_ai_overview and include_ads:
+            credits_per_keyword = 3
+        elif include_ai_overview or include_ads:
+            credits_per_keyword = 2
+        else:
+            credits_per_keyword = 1
         credits_needed = len(keywords) * credits_per_keyword
 
         if current_user.credits < credits_needed:
@@ -646,11 +650,14 @@ def scraper():
                 'gl': gl,
                 'hl': hl,
                 'device': user_agent_type,
-                'num': page_depth,
-                'include_ai_overview': 'true',
-                'include_ads': 'true',
-                'ads_optimized': 'true'
+                'num': page_depth
             }
+            if include_ai_overview:
+                params['include_ai_overview'] = 'true'
+            if include_ads:
+                params['include_ads'] = 'true'
+                params['ads_optimized'] = 'true'
+
             print("="*30)
             print("Sending GET to ValueSERP for:", keyword)
             pprint.pprint(params)
@@ -665,16 +672,21 @@ def scraper():
             rows = parse_valueserp_response(resp_json, keyword)
             all_results.extend(rows)
 
-            # Determine credits used for this keyword
+            # Determine credits used for this keyword (actual usage)
             ads_found = any(row["result_type"] == "ad" for row in rows)
             aio_found = any(row["result_type"] == "ai_overview" for row in rows)
             used = 1
-            if ads_found and aio_found:
-                used = 3
-            elif ads_found or aio_found:
-                used = 2
+            if include_ai_overview and include_ads:
+                if ads_found and aio_found:
+                    used = 3
+                elif ads_found or aio_found:
+                    used = 2
+            elif include_ai_overview or include_ads:
+                if ads_found or aio_found:
+                    used = 2
+            # else: used = 1 (organic only)
             actual_credits_used += used
-            # Refund if less than 3 charged
+            # Refund if less than charged up front
             if used < credits_per_keyword:
                 refund = credits_per_keyword - used
                 current_user.credits += refund
@@ -695,7 +707,7 @@ def scraper():
                     if field not in row:
                         row[field] = ""
                 writer.writerow(row)
-        
+
         gcs_filename = f"results/user_{current_user.id}/{filename}"
         print(f"[GCS UPLOAD] About to upload {local_path} to {gcs_filename} in bucket {GCS_BUCKET_NAME}")
         upload_to_gcs(local_path, gcs_filename)
