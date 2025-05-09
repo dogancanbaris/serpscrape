@@ -2,19 +2,19 @@
 {% block title %}API Playground - Serpscraper{% endblock %}
 {% block content %}
 <div class="bg-[#f7f9fa] min-h-screen flex flex-col items-center py-12 font-sans">
-  <div class="w-full max-w-screen-2xl mx-auto">
-    <div class="mb-10 px-4 md:px-0">
+  <div class="w-full max-w-screen-2xl mx-auto px-8">
+    <div class="mb-10">
       <div class="bg-blue-50 border border-blue-200 text-blue-900 px-12 py-6 rounded-xl flex items-center gap-2 text-lg shadow font-sans">
         <span class="font-bold text-blue-600 text-xl">API Playground</span>
         <span class="ml-4">Test ValueSERP's <span class="font-semibold text-blue-700">real-time API</span>. Enter your query and settings on the left, submit, and see live Google results (HTML, pretty JSON preview, or CSV) on the right. <span class="text-blue-700 font-semibold">No credits are charged for playground usage.</span></span>
       </div>
     </div>
-    <div class="w-full grid grid-cols-1 xl:grid-cols-2 gap-16">
+    <div class="grid grid-cols-1 xl:grid-cols-2 gap-16">
       <!-- Input Form -->
-      <form method="post" class="bg-white rounded-2xl shadow-xl p-16 flex flex-col gap-6 text-lg w-full min-h-[1200px] max-w-[1200px] mx-auto">
+      <form method="post" class="bg-white rounded-2xl shadow-xl p-16 flex flex-col gap-6 text-lg w-full">
         <div>
           <label class="block font-semibold mb-1 text-base">Search Type</label>
-          <select name="search_type" class="w-full border rounded p-3 text-lg focus:ring-2 focus:ring-orange-400">
+          <select name="search_type" class="w-full border rounded p-3 text-lg">
             <option value="search">Google Web Search</option>
             <option value="news">Google News</option>
             <option value="images">Google Images</option>
@@ -25,32 +25,32 @@
         </div>
         <div>
           <label class="block font-semibold mb-1 text-base">Search Query</label>
-          <input name="q" class="w-full border rounded p-3 text-lg focus:ring-2 focus:ring-orange-400" placeholder="e.g. buy engagement ring" required>
+          <input name="q" class="w-full border rounded p-3 text-lg" placeholder="e.g. buy engagement ring" required>
         </div>
         <div class="flex gap-4">
           <div class="flex-1">
             <label class="block font-semibold mb-1 text-base">AI Overview</label>
-            <select name="include_ai_overview" class="w-full border rounded p-3 text-lg focus:ring-2 focus:ring-orange-400">
+            <select name="include_ai_overview" class="w-full border rounded p-3 text-lg">
               <option value="true">True</option>
-              <option value="false">False</option>
+              <option value="false" selected>False</option>
             </select>
           </div>
           <div class="flex-1">
             <label class="block font-semibold mb-1 text-base">Include Ads</label>
-            <select name="include_ads" class="w-full border rounded p-3 text-lg focus:ring-2 focus:ring-orange-400">
+            <select name="include_ads" class="w-full border rounded p-3 text-lg">
               <option value="true">True</option>
-              <option value="false">False</option>
+              <option value="false" selected>False</option>
             </select>
           </div>
         </div>
         <div>
           <label class="block font-semibold mb-1 text-base">Location</label>
-          <input name="location" class="w-full border rounded p-3 text-lg focus:ring-2 focus:ring-orange-400" placeholder="e.g. Toronto, Ontario, Canada">
+          <input name="location" class="w-full border rounded p-3 text-lg" placeholder="e.g. Toronto, Ontario, Canada">
         </div>
         <div class="flex gap-4">
           <div class="flex-1">
             <label class="block font-semibold mb-1 text-base">Google Domain</label>
-            <select name="google_domain" class="w-full border rounded p-3 text-lg focus:ring-2 focus:ring-orange-400">
+            <select name="google_domain" class="w-full border rounded p-3 text-lg">
               <option value="google.com">google.com</option>
               <option value="google.ca">google.ca</option>
               <option value="google.co.uk">google.co.uk</option>
@@ -58,7 +58,7 @@
           </div>
           <div class="flex-1">
             <label class="block font-semibold mb-1 text-base">Country (gl)</label>
-            <select name="gl" class="w-full border rounded p-3 text-lg focus:ring-2 focus:ring-orange-400">
+            <select name="gl" class="w-full border rounded p-3 text-lg">
               <option value="us">United States</option>
               <option value="ca">Canada</option>
               <option value="uk">United Kingdom</option>
@@ -66,7 +66,7 @@
           </div>
           <div class="flex-1">
             <label class="block font-semibold mb-1 text-base">Language (hl)</label>
-            <select name="hl" class="w-full border rounded p-3 text-lg focus:ring-2 focus:ring-orange-400">
+            <select name="hl" class="w-full border rounded p-3 text-lg">
               <option value="en">English</option>
               <option value="fr">French</option>
               <option value="es">Spanish</option>
@@ -76,7 +76,7 @@
         <div class="flex gap-4">
           <div class="flex-1">
             <label class="block font-semibold mb-1 text-base">Device</label>
-            <select name="device" class="w-full border rounded p-3 text-lg focus:ring-2 focus:ring-orange-400">
+            <select name="device" class="w-full border rounded p-3 text-lg">
               <option value="desktop">Desktop</option>
               <option value="mobile">Mobile</option>
               <option value="tablet">Tablet</option>
@@ -84,7 +84,7 @@
           </div>
           <div class="flex-1">
             <label class="block font-semibold mb-1 text-base">Answer Box</label>
-            <select name="include_answer_box" class="w-full border rounded p-3 text-lg focus:ring-2 focus:ring-orange-400">
+            <select name="include_answer_box" class="w-full border rounded p-3 text-lg">
               <option value="">Default</option>
               <option value="true">True</option>
               <option value="false">False</option>
@@ -92,7 +92,7 @@
           </div>
           <div class="flex-1">
             <label class="block font-semibold mb-1 text-base">Flatten Results</label>
-            <select name="flatten_results" class="w-full border rounded p-3 text-lg focus:ring-2 focus:ring-orange-400">
+            <select name="flatten_results" class="w-full border rounded p-3 text-lg">
               <option value="">Default</option>
               <option value="true">True</option>
               <option value="false">False</option>
@@ -102,24 +102,32 @@
         <div class="flex gap-4">
           <div class="flex-1">
             <label class="block font-semibold mb-1 text-base">Page</label>
-            <input name="page" class="w-full border rounded p-3 text-lg focus:ring-2 focus:ring-orange-400" placeholder="1">
+            <input name="page" class="w-full border rounded p-3 text-lg" placeholder="1">
           </div>
           <div class="flex-1">
             <label class="block font-semibold mb-1 text-base">Num Results</label>
-            <input name="num" class="w-full border rounded p-3 text-lg focus:ring-2 focus:ring-orange-400" placeholder="10">
+            <input name="num" class="w-full border rounded p-3 text-lg" placeholder="10">
           </div>
           <div class="flex-1">
             <label class="block font-semibold mb-1 text-base">Max Page</label>
-            <input name="max_page" class="w-full border rounded p-3 text-lg focus:ring-2 focus:ring-orange-400" placeholder="2">
+            <input name="max_page" class="w-full border rounded p-3 text-lg" placeholder="2">
           </div>
         </div>
         <div class="flex gap-4">
           <div class="flex-1">
             <label class="block font-semibold mb-1 text-base">Output</label>
-            <select name="output" class="w-full border rounded p-3 text-lg focus:ring-2 focus:ring-orange-400">
+            <select name="output" class="w-full border rounded p-3 text-lg">
               <option value="html">HTML</option>
               <option value="json">JSON</option>
               <option value="csv">CSV</option>
+            </select>
+          </div>
+          <div class="flex-1">
+            <label class="block font-semibold mb-1 text-base">Include Raw HTML</label>
+            <select name="include_raw_html" class="w-full border rounded p-3 text-lg">
+              <option value="">Default</option>
+              <option value="true">True</option>
+              <option value="false">False</option>
             </select>
           </div>
           <div class="flex-1"></div>
@@ -131,7 +139,7 @@
         </div>
       </form>
       <!-- Output Panel -->
-      <div class="bg-white rounded-2xl shadow-xl px-12 py-10 flex flex-col text-lg w-full max-w-3xl mx-auto min-h-[1200px]">
+      <div class="bg-white rounded-2xl shadow-xl px-12 py-10 flex flex-col text-lg w-full min-h-[700px]">
         <div class="font-semibold text-gray-700 text-2xl mb-6">Output</div>
         <div class="flex-1">
           {% if error %}
