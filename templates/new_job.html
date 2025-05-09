@@ -19,14 +19,32 @@
             {% endfor %}
           </select>
         </div>
-        <!-- Device -->
-        <div>
-          <label class="block font-semibold mb-1">Device</label>
-          <select name="user_agent_type" class="w-full border rounded p-2">
-            {% for val, label in user_agent_types %}
-              <option value="{{ val }}">{{ label }}</option>
-            {% endfor %}
-          </select>
+        <!-- Device, Answer Box, Flatten Results in a row -->
+        <div class="flex gap-4 mb-4">
+          <div class="flex-1">
+            <label class="block font-semibold mb-1">Device</label>
+            <select name="user_agent_type" class="w-full border rounded p-2">
+              {% for val, label in user_agent_types %}
+                <option value="{{ val }}">{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="flex-1">
+            <label class="block font-semibold mb-1">Answer Box</label>
+            <select name="include_answer_box" class="w-full border rounded p-2">
+              <option value="">Default</option>
+              <option value="true">True</option>
+              <option value="false">False</option>
+            </select>
+          </div>
+          <div class="flex-1">
+            <label class="block font-semibold mb-1">Flatten Results</label>
+            <select name="flatten_results" class="w-full border rounded p-2">
+              <option value="">Default</option>
+              <option value="true">True</option>
+              <option value="false">False</option>
+            </select>
+          </div>
         </div>
         <!-- Location -->
         <div>
@@ -63,17 +81,17 @@
             </select>
           </div>
         </div>
-		<div class="flex gap-4 mb-4">
-			<label class="inline-flex items-center">
-				<input type="checkbox" name="include_ai_overview" value="true" class="form-checkbox" checked>
-				<span class="ml-2">Enable AI Overview</span>
-			</label>
-			<label class="inline-flex items-center">
-				<input type="checkbox" name="include_ads" value="true" class="form-checkbox" checked>
-				<span class="ml-2">Enable Ads</span>
-			</label>
-		</div>
-
+        <!-- AI Overview & Ads checkboxes (unchecked by default) -->
+        <div class="flex gap-4 mb-4">
+          <label class="inline-flex items-center">
+            <input type="checkbox" name="include_ai_overview" value="true" class="form-checkbox">
+            <span class="ml-2">Enable AI Overview</span>
+          </label>
+          <label class="inline-flex items-center">
+            <input type="checkbox" name="include_ads" value="true" class="form-checkbox">
+            <span class="ml-2">Enable Ads</span>
+          </label>
+        </div>
         <!-- Keywords -->
         <div>
           <label class="block font-semibold mb-1">Keywords</label>
@@ -87,12 +105,11 @@
             class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
         </div>
         <!-- Submit -->
-        <div class="flex gap-4 mt-4">
-          <button type="submit" class="bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-6 rounded shadow transition">Submit</button>
-          <a href="{{ url_for('download_batch_template') }}" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-5 py-2 rounded font-semibold">
-			Download CSV Template
-		  </a>
-
+        <div class="flex justify-center mt-4">
+          <button type="submit" class="bg-orange-600 hover:bg-orange-700 text-gray-900 font-bold py-2 px-10 rounded shadow transition text-lg">Submit</button>
+          <a href="{{ url_for('download_batch_template') }}" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-5 py-2 rounded font-semibold ml-4">
+            Download CSV Template
+          </a>
         </div>
       </form>
     </div>
