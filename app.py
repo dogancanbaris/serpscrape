@@ -24,7 +24,6 @@ try:
 except ImportError:
     pass
 
-
 GCS_BUCKET_NAME = os.environ.get('GCS_BUCKET_NAME')  # set this in your Render env vars
 
 # For Render: store credentials JSON in env var, use from_service_account_info
