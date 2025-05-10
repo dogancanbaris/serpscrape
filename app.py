@@ -740,8 +740,7 @@ def scraper():
 @app.route('/results/<path:filename>')
 @login_required
 def download_result(filename):
-    # filename is the GCS path stored in Job.result_file
-    signed_url = get_signed_url(filename)
+    signed_url = get_signed_url(filename)  # always fresh
     return redirect(signed_url)
 
 @app.route('/account', methods=['GET', 'POST'])
