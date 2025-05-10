@@ -136,9 +136,12 @@ def upload_to_gcs(local_path, gcs_filename):
     blob.upload_from_filename(local_path)
     print(f"Uploaded {local_path} to gs://{GCS_BUCKET_NAME}/{gcs_filename}")
 
+from datetime import timedelta
+
 def get_signed_url(gcs_filename, expiration=3600):
     blob = gcs_bucket.blob(gcs_filename)
-    return blob.generate_signed_url(expiration=expiration)
+    # Use version="v4" and pass a timedelta for expiration
+    return blob.generate_signed_url(version="v4", expiration=timedelta(seconds=expiration))
 
         
 @app.route('/download_batch/<int:job_id>')
