@@ -24,6 +24,7 @@ try:
 except ImportError:
     pass
 
+
 GCS_BUCKET_NAME = os.environ.get('GCS_BUCKET_NAME')  # set this in your Render env vars
 
 # For Render: store credentials JSON in env var, use from_service_account_info
@@ -737,11 +738,19 @@ def scraper():
         user_agent_types=user_agent_types
     )
 
+import datetime
+
 @app.route('/results/<path:filename>')
 @login_required
 def download_result(filename):
-    signed_url = get_signed_url(f"results/{filename}")  # Always add "results/" prefix here
-    return redirect(signed_url)
+# Print the current server UTC time for debugging
+print("Server UTC time:", datetime.datetime.utcnow().isoformat())
+
+# Generate the signed URL as before
+signed_url = get_signed_url(f"results/{filename}")
+print("Signed URL:", signed_url)
+
+return redirect(signed_url)
 
 @app.route('/account', methods=['GET', 'POST'])
 @login_required
