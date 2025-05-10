@@ -299,7 +299,7 @@ def signup():
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
-        if User.query.filter((User.username == username) | (User.email == email)).first():
+        if User.query.filter((User.username == username)  (User.email == email)).first():
             flash("Username or email already exists.")
             return redirect(url_for('signup'))
         user = User(username=username, email=email)
@@ -742,14 +742,14 @@ import datetime
 @app.route('/results/<path:filename>')
 @login_required
 def download_result(filename):
-# Print the current server UTC time for debugging
-print("Server UTC time:", datetime.datetime.utcnow().isoformat())
+    # Print the current server UTC time for debugging
+    print("Server UTC time:", datetime.datetime.utcnow().isoformat())
 
-# Generate the signed URL as before
-signed_url = get_signed_url(f"results/{filename}")
-print("Signed URL:", signed_url)
+    # Generate the signed URL as before
+    signed_url = get_signed_url(f"results/{filename}")
+    print("Signed URL:", signed_url)
 
-return redirect(signed_url)
+    return redirect(signed_url)
 
 @app.route('/account', methods=['GET', 'POST'])
 @login_required
